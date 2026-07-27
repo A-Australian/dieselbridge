@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PixelBridge</string>
+    <string name="notif_channel_name">PixelBridge link</string>
+    <string name="notif_text">BLE bridge running</string>
+    <string name="tile_label">PixelBridge</string>
+    <string name="tile_description">Status, battery, find phone</string>
+    <string name="tile_music_label">PixelBridge Music</string>
+</resources>

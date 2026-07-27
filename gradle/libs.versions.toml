@@ -1,0 +1,69 @@
+# Version catalog.
+#
+# When you first open the project in Android Studio, let the IDE sync and accept any
+# AGP Upgrade Assistant / version-alignment suggestions — the exact patch numbers below
+# are a known-good starting point, not a hard requirement.
+
+[versions]
+agp = "9.0.1"                 # Android Gradle Plugin 9.x -> requires Gradle 9.1.0+ (see wrapper)
+kotlin = "2.2.0"              # must match the Kotlin embedded in Gradle 9.1.0 to avoid extension clashes
+coreKtx = "1.15.0"
+lifecycle = "2.9.0"
+activityCompose = "1.10.1"
+coroutines = "1.9.0"
+composeBom = "2026.05.00"     # Compose BOM aligns androidx.compose.* — bump to the latest at first sync
+wearCompose = "1.6.2"         # androidx.wear.compose.* — confirmed stable (May 2026)
+wearToolingPreview = "1.0.0"  # WearDevices constants for @Preview
+wearInput = "1.2.0"           # RemoteInputIntentHelper for on-watch reply input (added after 1.0.0)
+wearOngoing = "1.0.0"         # OngoingActivity for the foreground-service notification
+wearTiles = "1.6.1"           # androidx.wear.tiles.* — glanceable status/find-phone tile
+wearProtolayout = "1.4.1"     # androidx.wear.protolayout.* — Material3 tile layout DSL
+concurrentFutures = "1.2.0"   # androidx.concurrent — CallbackToFutureAdapter for the tile's ListenableFuture
+junit = "4.13.2"              # JVM unit tests
+orgJson = "20240303"          # real org.json on the unit-test classpath (Android's is a stub)
+androidxTestExtJunit = "1.2.1"
+androidxTestRunner = "1.6.2"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycle" }
+androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+
+# Compose (base) via BOM — versions resolved by the BOM
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+
+# Wear Compose (Material 3 Expressive)
+androidx-wear-compose-material3 = { group = "androidx.wear.compose", name = "compose-material3", version.ref = "wearCompose" }
+androidx-wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "wearCompose" }
+androidx-wear-compose-ui-tooling = { group = "androidx.wear.compose", name = "compose-ui-tooling", version.ref = "wearCompose" }
+androidx-wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
+androidx-wear-ongoing = { group = "androidx.wear", name = "wear-ongoing", version.ref = "wearOngoing" }
+androidx-wear-input = { group = "androidx.wear", name = "wear-input", version.ref = "wearInput" }
+
+# Wear Tiles + ProtoLayout (Material 3)
+androidx-wear-tiles = { group = "androidx.wear.tiles", name = "tiles", version.ref = "wearTiles" }
+androidx-wear-tiles-tooling-preview = { group = "androidx.wear.tiles", name = "tiles-tooling-preview", version.ref = "wearTiles" }
+androidx-wear-tiles-tooling = { group = "androidx.wear.tiles", name = "tiles-tooling", version.ref = "wearTiles" }
+androidx-wear-protolayout = { group = "androidx.wear.protolayout", name = "protolayout", version.ref = "wearProtolayout" }
+androidx-wear-protolayout-material3 = { group = "androidx.wear.protolayout", name = "protolayout-material3", version.ref = "wearProtolayout" }
+androidx-wear-protolayout-expression = { group = "androidx.wear.protolayout", name = "protolayout-expression", version.ref = "wearProtolayout" }
+androidx-concurrent-futures = { group = "androidx.concurrent", name = "concurrent-futures", version.ref = "concurrentFutures" }
+
+# Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+json = { group = "org.json", name = "json", version.ref = "orgJson" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+# No org.jetbrains.kotlin.android here: AGP 9.0 provides built-in Kotlin and registers the `kotlin`
+# extension itself. Applying the standalone plugin double-registers it and fails the build.
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -1,0 +1,28 @@
+# Gradle
+.gradle/
+build/
+# keep the wrapper jar tracked so the project bootstraps without a local Gradle
+!gradle/wrapper/gradle-wrapper.jar
+
+# Build artifacts (only ever produced under build/, but belt-and-suspenders)
+*.apk
+*.aab
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+
+# Claude Code local settings (keep .claude/settings.json shared, ignore the local override)
+.claude/settings.local.json
+
+# OS junk
+.DS_Store
+
+# Signing material — never commit
+*.jks
+*.keystore
+.watch_endpoint

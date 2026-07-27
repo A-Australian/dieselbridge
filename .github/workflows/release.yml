@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build debug APK
+        run: ./gradlew :watch:assembleDebug
+
+      - name: Stage APK under a clean asset name
+        run: cp watch/build/outputs/apk/debug/watch-debug.apk "pixelbridge-watch-${GITHUB_REF_NAME#v}.apk"
+
+      - name: Create or update GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ASSET="pixelbridge-watch-${GITHUB_REF_NAME#v}.apk"
+          NOTES="Standalone Wear OS notification app for the Google Pixel Watch (1st gen). The attached APK is **debug-signed** — sideload with \`adb install -r\`. Requires unmodified Gadgetbridge on the phone (added as a *Bangle.js* device). Setup: see the README. Changes: see CHANGELOG.md."
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$ASSET" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$ASSET" --title "PixelBridge $GITHUB_REF_NAME" --notes "$NOTES"
+          fi
