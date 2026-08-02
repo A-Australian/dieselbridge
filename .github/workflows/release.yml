@@ -22,23 +22,33 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
+      # Grant execution permission to the gradlew wrapper script
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      # Note: Check if your main module is called :app or :watch. 
+      # If your project folder has 'app' instead of 'watch', change :watch to :app below.
+      # Based on your MainActivity context snippet (package net.farcaster.pixelbridge.ui), 
+      # let's stick to the target path but make sure it builds correctly.
       - name: Build debug APK
         run: ./gradlew :watch:assembleDebug
 
+      # If your build directory structure uses 'app', adjust this target path accordingly.
       - name: Stage APK under a clean asset name
-        run: cp watch/build/outputs/apk/debug/watch-debug.apk "pixelbridge-watch-${GITHUB_REF_NAME#v}.apk"
+        run: cp watch/build/outputs/apk/debug/watch-debug.apk "dieselbridge-${GITHUB_REF_NAME#v}.apk"
 
       - name: Create or update GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          ASSET="pixelbridge-watch-${GITHUB_REF_NAME#v}.apk"
-          NOTES="Standalone Wear OS notification app for the Google Pixel Watch (1st gen). The attached APK is **debug-signed** — sideload with \`adb install -r\`. Requires unmodified Gadgetbridge on the phone (added as a *Bangle.js* device). Setup: see the README. Changes: see CHANGELOG.md."
+          ASSET="dieselbridge-${GITHUB_REF_NAME#v}.apk"
+          NOTES="Custom Wear OS 2.14 compatible build of PixelBridge (Legacy Android 9 / API 28 target). The attached APK is **debug-signed** — sideload onto your legacy Wear OS watch (like the Diesel DW9D1) with \`adb install -r\`. Requires unmodified Gadgetbridge on the phone (added as a *Bangle.js* device)."
+          
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" "$ASSET" --clobber
           else
-            gh release create "$GITHUB_REF_NAME" "$ASSET" --title "PixelBridge $GITHUB_REF_NAME" --notes "$NOTES"
+            gh release create "$GITHUB_REF_NAME" "$ASSET" --title "PixelBridge WearOS2 $GITHUB_REF_NAME" --notes "$NOTES"
           fi
