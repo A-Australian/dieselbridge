@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-package net.farcaster.pixelbridge.debug
+package org.aaustralian.dieselbridge.debug
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,8 +8,8 @@ import android.content.Intent
 import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
-import net.farcaster.pixelbridge.notify.NotificationRouter
-import net.farcaster.pixelbridge.notify.WatchNotifier
+import org.aaustralian.dieselbridge.notify.NotificationRouter
+import org.aaustralian.dieselbridge.notify.WatchNotifier
 
 /**
  * DEBUG-ONLY: injects a simulated notification straight into the real pipeline
@@ -17,8 +17,8 @@ import net.farcaster.pixelbridge.notify.WatchNotifier
  * on the **emulator**, which has no Bluetooth. Only compiled into debug builds (src/debug).
  *
  * Convenience form:
- *   adb shell am broadcast -a net.farcaster.pixelbridge.INJECT \
- *     -n net.farcaster.pixelbridge/.debug.DebugInjectReceiver \
+ *   adb shell am broadcast -a org.aaustralian.dieselbridge.INJECT \
+ *     -n org.aaustralian.dieselbridge/.debug.DebugInjectReceiver \
  *     --es app Signal --es title Alice --es body "Coffee?" --el id 42
  *
  * Raw Bangle.js line:  --es line 'GB({"t":"notify","id":7,"src":"X","title":"Hi","body":"yo"})'

@@ -31,7 +31,7 @@ jobs:
 
       # Note: Check if your main module is called :app or :watch. 
       # If your project folder has 'app' instead of 'watch', change :watch to :app below.
-      # Based on your MainActivity context snippet (package net.farcaster.pixelbridge.ui), 
+      # Based on your MainActivity context snippet (package org.aaustralian.dieselbridge.ui), 
       # let's stick to the target path but make sure it builds correctly.
       - name: Build debug APK
         run: ./gradlew :watch:assembleDebug

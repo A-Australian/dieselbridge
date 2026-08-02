@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-package net.farcaster.pixelbridge.ble
+package org.aaustralian.dieselbridge.ble
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

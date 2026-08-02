@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "net.farcaster.pixelbridge"
+    namespace = "org.aaustralian.dieselbridge"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "net.farcaster.pixelbridge"
+        applicationId = "org.aaustralian.dieselbridge"
         minSdk = 28          // Wear OS 3 — covers every Pixel Watch Gen-1 firmware
         targetSdk = 28         // Wear OS 5.1 (Android 15) — the Gen-1 terminal OS. 36 is also valid.
         versionCode = 8

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-package net.farcaster.pixelbridge.protocol
+package org.aaustralian.dieselbridge.protocol
 
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
