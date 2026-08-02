@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-package net.farcaster.pixelbridge.ui
+package org.aaustralian.dieselbridge.ui
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -11,10 +11,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import net.farcaster.pixelbridge.data.CannedResponsesStore
-import net.farcaster.pixelbridge.data.MusicStore
-import net.farcaster.pixelbridge.data.NotificationStore
-import net.farcaster.pixelbridge.data.WatchNotification
+import org.aaustralian.dieselbridge.data.CannedResponsesStore
+import org.aaustralian.dieselbridge.data.MusicStore
+import org.aaustralian.dieselbridge.data.NotificationStore
+import org.aaustralian.dieselbridge.data.WatchNotification
 
 /**
  * Compose UI test (runs on the Wear emulator or a real watch). Guards the notification card's

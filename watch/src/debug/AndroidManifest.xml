@@ -6,7 +6,7 @@
             android:name=".debug.DebugInjectReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="net.farcaster.pixelbridge.INJECT" />
+                <action android:name="org.aaustralian.dieselbridge.INJECT" />
             </intent-filter>
         </receiver>
     </application>
