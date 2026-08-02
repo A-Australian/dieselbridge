@@ -133,7 +133,13 @@ class PixelBridgeService : Service() {
             .setOngoing(true)
             .build()
         // minSdk 30 => the typed startForeground and the connectedDevice type constant always exist.
-        startForeground(NOTIF_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    // Android 10+ (API 29+) requires the foreground service type parameter
+    startForeground(NOTIF_ID, notification, android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE)
+} else {
+    // Android 9 (API 28) on your Diesel watch uses the legacy fallback version
+    startForeground(NOTIF_ID, notification)
+}
     }
 
     private fun createChannel() {
