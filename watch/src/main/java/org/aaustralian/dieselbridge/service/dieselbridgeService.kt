@@ -40,7 +40,7 @@ import org.aaustralian.dieselbridge.tile.PixelBridgeTileService
  * automatically when the user enables Bluetooth. A foreground service alone does NOT beat Doze —
  * the app also needs a battery-optimization exemption (see docs/architecture.md).
  */
-class PixelBridgeService : Service() {
+class DieselBridgeService : Service() {
 
     private var controller: BlePeripheralController? = null
 
@@ -153,7 +153,7 @@ class PixelBridgeService : Service() {
     }
 
     companion object {
-        private const val CHANNEL_ID = "pixelbridge_link"
+        private const val CHANNEL_ID = "dieselbridge_link"
         private const val NOTIF_ID = 1
 
         fun start(context: Context) {
