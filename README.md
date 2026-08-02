@@ -1,8 +1,10 @@
-# PixelBridge
+# DieselBridge
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-See and react to your Android phone's notifications on a **Google Pixel Watch (1st gen)** over a
+A WearOS 2 backport of [PixelBridge](https://github.com/chluehr/pixelbridge).
+
+See and react to your Android phone's notifications on a any **WearOS 2+ watch** over a
 **direct Bluetooth LE link** — **without Google Play Services, the Wearable Data Layer, or the Pixel
 Watch companion app.**
 
@@ -13,8 +15,8 @@ pushes notifications to it with **zero new phone-side code**.
 
 ```
 ┌─────────────────────────┐        BLE GATT (Nordic UART Service)        ┌──────────────────────────┐
-│ Android phone           │  ── GB({"t":"notify","title":…,"body":…}) ─▶ │ Pixel Watch (Wear OS 5.1)│
-│ Gadgetbridge (unchanged)│                                              │ PixelBridge app          │
+│ Android phone           │  ── GB({"t":"notify","title":…,"body":…}) ─▶ │ WearOS 2+ Watch          │
+│ Gadgetbridge (unchanged)│                                              │ DieselBridge app          │
 │  • NotificationListener │  ◀─ {"t":"notify","id":…,"n":"DISMISS"} ───  │  • NUS GATT server        │
 │  • BLE central          │                                              │  • Wear Compose UI        │
 └─────────────────────────┘                                              └──────────────────────────┘
@@ -38,19 +40,18 @@ See [`CHANGELOG.md`](CHANGELOG.md) for the full feature list.
 
 ## What you need
 
-- **Google Pixel Watch (1st gen)** running Wear OS 5.1 (API 35).
+- **Any semi-modern WearOS watch** It needs to run WearOS 2+, an example would be the Diesel On Fadelite (DW9D1)
 - **An Android phone** (to run Gadgetbridge) — the phone and watch talk over Bluetooth.
 - **A computer with the Android SDK, JDK 21, and `adb`** to build and sideload. Full install list in
   [`docs/dev-environment.md`](docs/dev-environment.md) (macOS Apple-Silicon walkthrough).
-- The watch and your computer on the **same Wi-Fi** (the watch has no USB data port — ADB is Wi-Fi
-  only).
+- The watch and your computer on the **same Wi-Fi** (The vast majority of watches, including the tested watch, lack USB data connections).
 
 ## Setup
 
 ### 1. Build the watch app
 
 ```bash
-git clone <this-repo> && cd PixelBridge
+git clone <this-repo> && cd dieselbridge
 cp local.properties.example local.properties      # set sdk.dir, or let Android Studio write it
 ./gradlew :watch:assembleDebug
 # → watch/build/outputs/apk/debug/watch-debug.apk
@@ -66,6 +67,7 @@ On the watch:
 3. Open **Wireless debugging → Pair new device with pairing code** — note the `IP:port` and 6-digit code.
 
 On the computer:
+ON NEWER WATCHES (WearOS 3+):
 ```bash
 adb pair 192.168.x.y:<pairing-port>       # one-time; enter the 6-digit code
 adb connect 192.168.x.y:<connection-port> # each session; the port is on the MAIN Wireless-debugging screen
@@ -74,29 +76,37 @@ adb devices                               # confirm it shows as "device"
 > The **connection port differs from the pairing port**, and Wear OS **rotates the connection port**
 > after sleep/reboot — re-read it and `adb connect` again if the link drops.
 
+ON LEGACY WATCHES (WearOS 2 ONLY!):
+```bash
+adb connect 192.168.x.y # Set to the default (5555), ADB will enter this for you
+adb devices                               # confirm it shows as "device"
+```
+> Unlike newer watches, WearOS 2 has a more relaxed "handshake".
+> You will need to accept a prompt on the device to allow ADB.
+> While the port won't change, your router will rotate the IP addresses of your internal devices, so if you can't connect, check the watch for the current IP. 
 ### 3. Install (sideload)
 
 ```bash
-adb install -r watch/build/outputs/apk/debug/watch-debug.apk
+adb install -r <path/to/apk>
 # If "more than one device/emulator": target the watch explicitly, e.g.
 # adb -s 192.168.x.y:<port> install -r watch/build/outputs/apk/debug/watch-debug.apk
 ```
 
 ### 4. Watch: permissions, Bluetooth, battery
 
-1. **Launch PixelBridge** on the watch and **grant the prompts**: **Nearby devices** (Bluetooth) and
-   **Notifications**.
+1. **Launch DieselBridge** on the watch and **grant the prompts**: **Nearby devices** (Bluetooth) and
+   **Notifications**. Note: If the app crashes on WearOs 2 watches, grant location manually via settings, looking into this bug.
 2. **Enable Bluetooth on the watch** — it defaults **off** on a watch never paired via the companion
    app (`adb shell settings get global bluetooth_on` should read `1`; the app shows "Bluetooth is off"
    if not).
 3. **Battery-optimization exemption** so Doze doesn't drop the link. Wear OS 5.1 has **no in-app
    dialog** for this, so grant it over adb:
    ```bash
-   adb shell dumpsys deviceidle whitelist +net.farcaster.pixelbridge
+   adb shell dumpsys deviceidle whitelist +org.aaustralian.dieselbridge
    ```
    When done, the watch shows `● <phone>` (connected) and no "Battery not exempt" banner.
 
-The watch advertises its Bluetooth name as **`Bangle.js PixelBridge`** (so Gadgetbridge recognizes it).
+The watch advertises its Bluetooth name as **`Bangle.js DieselBridge`** (so Gadgetbridge recognizes it).
 
 ### 5. Phone: set up Gadgetbridge
 
@@ -104,7 +114,7 @@ The watch advertises its Bluetooth name as **`Bangle.js PixelBridge`** (so Gadge
    (unmodified — no build needed).
 2. Open it and **grant Notification Access** when prompted (or Android **Settings → Apps → Special app
    access → Notification access → Gadgetbridge**). Without this it captures nothing.
-3. **＋ / Connect new device →** let it scan → pick **`Bangle.js PixelBridge`** (a *Bangle.js* device) →
+3. **＋ / Connect new device →** let it scan → pick **`Bangle.js DieselBridge`** (a *Bangle.js* device) →
    connect. The watch header flips to **`● <phone>`**.
 4. **Gadgetbridge → Settings → Notifications → enable "Send notifications when the screen is on"** —
    otherwise notifications are only forwarded while the phone screen is off.
@@ -112,12 +122,12 @@ The watch advertises its Bluetooth name as **`Bangle.js PixelBridge`** (so Gadge
 ### 6. Verify
 
 Send yourself a message (or any app notification). The watch should **buzz** and show a **native
-notification card** plus an entry in the PixelBridge list. Tap **Dismiss** (clears it on the phone) or
+notification card** plus an entry in the DieselBridge list. Tap **Dismiss** (clears it on the phone) or
 **Reply** (Wear voice/keyboard → posts in the conversation).
 
 ## Using it
 
-- Incoming notifications appear as **system notifications** (buzz + native card, even when PixelBridge
+- Incoming notifications appear as **system notifications** (buzz + native card, even when DieselBridge
   is backgrounded) and in the **in-app list**. Scroll the list with the **rotary crown**.
 - Each card has stacked, full-width **Reply / Dismiss** buttons. Reply opens Wear's voice/keyboard
   input and only shows when the notification is replyable (Gadgetbridge's `reply` flag); Dismiss acts
@@ -135,7 +145,7 @@ notification card** plus an entry in the PixelBridge list. Tap **Dismiss** (clea
   and **🔉 / 🔊**.
 - **Canned replies:** configure quick replies in **Gadgetbridge's per-device settings**; they then
   appear as tap-to-send choices in the watch's reply picker.
-- **Tiles:** add PixelBridge tiles (long-press the watch face → Tiles → +): a **notifications** tile
+- **Tiles:** add DieselBridge tiles (long-press the watch face → Tiles → +): a **notifications** tile
   (a count + the latest few, tap **Open** for the full list + actions) and a **music** tile
   (now-playing + a transport row **⏮ ▶/⏸ ⏭** and a volume row **🔉 🔊**).
 - **Heads-up/vibration only fire while the watch is on your wrist** — Wear suppresses haptics and
@@ -150,7 +160,7 @@ notification card** plus an entry in the PixelBridge list. Tap **Dismiss** (clea
 | Watch screen shows **"Bluetooth is off"** | Turn Bluetooth on (`adb shell svc bluetooth enable`, or the BT quick-settings tile). |
 | `adb: device offline` / `connection refused` | Wear OS rotated the wireless-debug port — re-read it on the watch and `adb connect` again. |
 | `more than one device/emulator` | Same watch on two transports — target it: `adb -s <ip:port> …`. |
-| Reply shows **"(Google canned reply)"** in the chat | Added by Molly/Signal downstream, not by PixelBridge. |
+| Reply shows **"(Google canned reply)"** in the chat | Added by Molly/Signal downstream, not by DieselBridge. |
 | Link drops when the watch sleeps (dev) | Keep the watch on its charger / screen-on while developing. |
 
 ## Development
@@ -186,17 +196,10 @@ Watch = BLE **peripheral** hosting the **Nordic UART Service**; phone = **Gadget
 - **Gadgetbridge integration & the "no Google" constraint:** [`docs/gadgetbridge-integration.md`](docs/gadgetbridge-integration.md), [`docs/no-google-constraint.md`](docs/no-google-constraint.md)
 
 ## Why
-
-This is a personal project, built to solve a personal problem: pairing a 1st-gen Pixel Watch with a
-**de-googled [GrapheneOS](https://grapheneos.org/) phone**. GrapheneOS has **no Google Play Services**,
-so the standard Wear OS notification path (Play Services + the Pixel Watch companion app) simply
-doesn't work — and the 1st-gen watch is EOL anyway (frozen on Wear OS 5.1, no updates after Oct 2025).
-
-PixelBridge keeps the watch useful as a **private, Google-free notification display**, using only
-stock `android.bluetooth` on the watch and **unmodified Gadgetbridge** on the phone. It works with any
-Android phone that can run Gadgetbridge, not just GrapheneOS.
+The original author of [PixelBridge](https://github.com/chluehr/pixelbridge) created this project, and it seemed to have worked for him. However, for my legacy WearOS watches, both running WearOS 2, this project wouldn't work on the device as it required atleast Android 11 (WearOS 3), and to make matters worse, the original OEM companion apps weren't even functional as both have long left the watch space. So this is a fork of the original project, and it works on WearOS 2 now!
 
 Built by **Christoph Lühr** with **[Claude Code](https://www.anthropic.com/claude-code)**.
+Legacy Backport by **A Australian** with pure, raw, human talent and like the google search ai thing 😭🙏
 
 ## License
 
