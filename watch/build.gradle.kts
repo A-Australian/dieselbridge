@@ -13,8 +13,8 @@ android {
 
     defaultConfig {
         applicationId = "net.farcaster.pixelbridge"
-        minSdk = 30            // Wear OS 3 — covers every Pixel Watch Gen-1 firmware
-        targetSdk = 35         // Wear OS 5.1 (Android 15) — the Gen-1 terminal OS. 36 is also valid.
+        minSdk = 28          // Wear OS 3 — covers every Pixel Watch Gen-1 firmware
+        targetSdk = 28         // Wear OS 5.1 (Android 15) — the Gen-1 terminal OS. 36 is also valid.
         versionCode = 8
         versionName = "1.0.0"
 
