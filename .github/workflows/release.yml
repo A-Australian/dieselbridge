@@ -45,10 +45,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           ASSET="dieselbridge-${GITHUB_REF_NAME#v}.apk"
-          NOTES="Custom Wear OS 2.14 compatible build of PixelBridge (Legacy Android 9 / API 28 target). The attached APK is **debug-signed** — sideload onto your legacy Wear OS watch (like the Diesel DW9D1) with \`adb install -r\`. Requires unmodified Gadgetbridge on the phone (added as a *Bangle.js* device)."
+          NOTES="WearOS bridge for use with Gadgetbridge. The attached APK is **debug-signed** — sideload onto your Wear OS watch (like the Diesel DW9D1) with \`adb install -r\`. Requires unmodified Gadgetbridge on the phone (It'll appear as a Bangle.js device)."
           
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" "$ASSET" --clobber
           else
-            gh release create "$GITHUB_REF_NAME" "$ASSET" --title "DieselBridge WearOS2 $GITHUB_REF_NAME" --notes "$NOTES"
+            gh release create "$GITHUB_REF_NAME" "$ASSET" --title "DieselBridge $GITHUB_REF_NAME" --notes "$NOTES"
           fi
