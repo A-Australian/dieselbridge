@@ -29,7 +29,15 @@ class NusAdvertiser(private val context: Context) {
 
     fun start(onResult: (success: Boolean, error: String?) -> Unit) {
         val adapter = manager.adapter ?: run { onResult(false, "no adapter"); return }
-        runCatching { adapter.name = BleUuids.ADVERTISED_NAME }
+        runCatching {
+            val currentName = adapter.name ?: "Smartwatch"
+            // Prevent duplicate prefixes if the service restarts
+            if (!currentName.startsWith("Bangle.js")) {
+                val newName = "Bangle.js $currentName"
+                adapter.name = newName
+                Log.i(TAG, "Renamed Bluetooth adapter from '$currentName' to '$newName'")
+            }
+        }
         val adv = adapter.bluetoothLeAdvertiser ?: run {
             onResult(false, "getBluetoothLeAdvertiser() == null — peripheral role NOT supported")
             return
