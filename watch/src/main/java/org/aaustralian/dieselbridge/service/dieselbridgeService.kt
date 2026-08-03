@@ -157,7 +157,7 @@ class DieselBridgeService : Service() {
         private const val NOTIF_ID = 1
 
         fun start(context: Context) {
-            val intent = Intent(context, PixelBridgeService::class.java)
+            val intent = Intent(context, DieselBridgeService::class.java)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intent)
             } else {
@@ -166,7 +166,7 @@ class DieselBridgeService : Service() {
         }
 
         fun stop(context: Context) {
-            context.stopService(Intent(context, PixelBridgeService::class.java))
+            context.stopService(Intent(context, DieselBridgeService::class.java))
         }
     }
 }

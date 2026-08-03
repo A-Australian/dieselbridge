@@ -30,7 +30,7 @@ import org.aaustralian.dieselbridge.data.NowPlaying
  * A glanceable now-playing tile: the current track/artist plus a three-button transport
  * (previous · play/pause · next). Reads the process-wide [MusicStore] snapshot synchronously —
  * the foreground service pushes fresh tile updates via [TileService.getUpdater] (see
- * PixelBridgeService) whenever the now-playing state changes.
+ * DieselBridgeService) whenever the now-playing state changes.
  *
  * Each transport button carries a [ActionBuilders.LoadAction]; when the user taps one the platform
  * re-requests the tile with [lastClickableId][androidx.wear.protolayout.StateBuilders.State.getLastClickableId]
