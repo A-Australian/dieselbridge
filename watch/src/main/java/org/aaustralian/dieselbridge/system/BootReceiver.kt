@@ -6,7 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import org.aaustralian.dieselbridge.service.PixelBridgeService
+import org.aaustralian.dieselbridge.service.DieselBridgeService
 
 /**
  * Restarts the BLE bridge foreground service after a watch reboot so the notification link comes
@@ -18,7 +18,7 @@ class BootReceiver : BroadcastReceiver() {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED ||
             intent.action == Intent.ACTION_LOCKED_BOOT_COMPLETED
         ) {
-            runCatching { PixelBridgeService.start(context) }
+            runCatching { DieselBridgeService.start(context) }
                 .onFailure { Log.w(TAG, "boot start failed: ${it.message}") }
         }
     }

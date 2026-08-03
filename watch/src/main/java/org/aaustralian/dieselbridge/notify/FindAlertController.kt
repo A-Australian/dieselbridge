@@ -188,7 +188,7 @@ object FindAlertController {
 
     private const val CHANNEL_ID = "pixelbridge_find"
 
-    /** Distinct from PixelBridgeService.NOTIF_ID (1) so the two never collide. */
+    /** Distinct from DieselBridgeService.NOTIF_ID (1) so the two never collide. */
     private const val FIND_NOTIF_ID = 0x7654_3210
 
     private const val AUTO_STOP_MS = 60_000L

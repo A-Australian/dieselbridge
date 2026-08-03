@@ -89,7 +89,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <service
-            android:name=".service.PixelBridgeService"
+            android:name=".service.DieselBridgeService"
             android:exported="false"
             android:foregroundServiceType="connectedDevice" />
 

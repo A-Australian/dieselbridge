@@ -11,7 +11,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import org.aaustralian.dieselbridge.ble.ProbeStateHolder
-import org.aaustralian.dieselbridge.service.PixelBridgeService
+import org.aaustralian.dieselbridge.service.DieselBridgeService
 import org.aaustralian.dieselbridge.system.PowerHelper
 
 /**
@@ -67,6 +67,6 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startBridge() {
-        PixelBridgeService.start(this)
+        DieselBridgeService.start(this)
     }
 }

@@ -309,7 +309,7 @@ object CallController {
     // v2: the original silent channel couldn't produce a heads-up; this one enables vibration.
     private const val CHANNEL_ID = "pixelbridge_call_v2"
 
-    /** Distinct from FindAlertController.FIND_NOTIF_ID (0x7654_3210) and PixelBridgeService.NOTIF_ID (1). */
+    /** Distinct from FindAlertController.FIND_NOTIF_ID (0x7654_3210) and DieselBridgeService.NOTIF_ID (1). */
     private const val CALL_NOTIF_ID = 0x7654_3211
 
     private const val AUTO_STOP_MS = 90_000L

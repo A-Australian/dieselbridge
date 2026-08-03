@@ -25,7 +25,7 @@ object BleUuids {
     val CCCD: UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
 
     /** Advertised BLE name — MUST match Gadgetbridge's Bangle.js coordinator regex `Bangle\.js.*`. */
-    const val ADVERTISED_NAME = "Bangle.js PixelBridge"
+    const val ADVERTISED_NAME = "Bangle.js Diesel"
 
     /** Message frames are newline-delimited; the phone->watch frame is prefixed with a 0x10 DLE byte. */
     const val NEWLINE: Byte = 0x0A

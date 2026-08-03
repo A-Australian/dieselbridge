@@ -14,7 +14,7 @@ Deliver Android phone notifications to a Pixel Watch Gen-1 and let the user **di
    │   captures + filters notifications         │        │   renders the notification list         │
    │                │                           │        │                ▲                        │
    │                ▼                           │        │                │                        │
-   │ Bangle.js DeviceSupport (BLE CENTRAL)      │        │ PixelBridgeService (connectedDevice FGS)│
+   │ Bangle.js DeviceSupport (BLE CENTRAL)      │        │ DieselBridgeService (connectedDevice FGS)│
    │   connects to the advertising watch        │        │   owns the BLE stack                    │
    │                │                           │        │                │                        │
    └────────────────┼───────────────────────────┘        └────────────────┼───────────────────────┘
@@ -62,7 +62,7 @@ Long-lived BLE dies when the process is killed, and Doze defers BLE even for for
 The layered mitigation (applies to whichever device is central — here, the phone):
 
 1. **Foreground service**, `foregroundServiceType="connectedDevice"` + `FOREGROUND_SERVICE_CONNECTED_DEVICE`
-   (mandatory API 34+). The watch app also runs one (`PixelBridgeService`) for its GATT server.
+   (mandatory API 34+). The watch app also runs one (`DieselBridgeService`) for its GATT server.
 2. **Battery-optimization exemption** (`REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`) — a foreground service
    alone does **not** beat Doze.
 3. **`CompanionDeviceManager` association** — grants `REQUEST_COMPANION_RUN_IN_BACKGROUND` and, on
