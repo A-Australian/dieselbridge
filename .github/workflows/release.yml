@@ -29,23 +29,32 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # Note: Check if your main module is called :app or :watch. 
-      # If your project folder has 'app' instead of 'watch', change :watch to :app below.
-      # Based on your MainActivity context snippet (package org.aaustralian.dieselbridge.ui), 
-      # let's stick to the target path but make sure it builds correctly.
-      - name: Build debug APK
-        run: ./gradlew :watch:assembleDebug
+      # Switched to assembleRelease for optimized production compilation
+      - name: Build release APK
+        run: ./gradlew :watch:assembleRelease
 
-      # If your build directory structure uses 'app', adjust this target path accordingly.
+      # Securely decode and sign the compiled release APK
+      - name: Decode and Sign Android APK
+        id: sign_app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: watch/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      # Stages the securely signed file with your clean asset naming scheme
       - name: Stage APK under a clean asset name
-        run: cp watch/build/outputs/apk/debug/watch-debug.apk "dieselbridge-${GITHUB_REF_NAME#v}.apk"
+        run: cp "${{ steps.sign_app.outputs.signedReleaseFile }}" "dieselbridge-${GITHUB_REF_NAME#v}.apk"
 
+      # Updated the notes to accurately reflect that the app is now securely release-signed
       - name: Create or update GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           ASSET="dieselbridge-${GITHUB_REF_NAME#v}.apk"
-          NOTES="WearOS bridge for use with Gadgetbridge. The attached APK is **debug-signed** — sideload onto your Wear OS watch (like the Diesel DW9D1) with \`adb install -r\`. Requires unmodified Gadgetbridge on the phone (It'll appear as a Bangle.js device)."
+          NOTES="WearOS bridge for use with Gadgetbridge. The attached APK is **release-signed** — sideload onto your Wear OS watch (like the Diesel DW9D1) with \`adb install -r\`. Requires unmodified Gadgetbridge on the phone (It'll appear as a Bangle.js device)."
           
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" "$ASSET" --clobber
