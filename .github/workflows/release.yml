@@ -1,12 +1,9 @@
 name: Release
-
 on:
   push:
     tags: ["v*"]
-
 permissions:
   contents: write
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -21,6 +18,9 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: Install Android build-tools
+        run: sdkmanager "build-tools;34.0.0"
 
       # Grant execution permission to the gradlew wrapper script
       - name: Make Gradle executable
@@ -57,7 +57,7 @@ jobs:
         run: |
           ASSET="dieselbridge-${GITHUB_REF_NAME#v}.apk"
           NOTES="WearOS bridge for use with Gadgetbridge. The attached APK is **release-signed** — sideload onto your Wear OS watch (like the Diesel DW9D1) with \`adb install -r\`. Requires unmodified Gadgetbridge on the phone (It'll appear as a Bangle.js device)."
-          
+
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" "$ASSET" --clobber
           else
