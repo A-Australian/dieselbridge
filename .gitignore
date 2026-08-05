@@ -26,3 +26,4 @@ local.properties
 *.jks
 *.keystore
 .watch_endpoint
+.encyrptedtxt
