@@ -1,7 +1,18 @@
 # Changelog
 
 All notable changes to PixelBridge. Loosely follows [Keep a Changelog](https://keepachangelog.com/);
-versions map to git tags and GitHub releases.
+versions map to git tags and GitHub releases. I'll try to keep DieselBridge and PixelBridge changes seperate.
+
+## DieselBridge
+## [1.0.1]
+
+The first (true) release of DieselBridge! It mostly changed branding to DieselBridge, but mainly, it made it compatible with WearOS 2 (Android 9).
+
+## [1.0.2 & 3]
+
+Now the app is signed with a **release** key instead of a debug key, so you'll have to uninstall DieselBridge for it to install this update. It changed some more of the branding, and now instead of the device showing up as "bandle.Js DieselBridge" it'll show up as "Bandle.js <Device name>". Also some other stuff, check commits.
+
+## PixelBridge
 
 ## [1.0.0] — 2026-07-27
 

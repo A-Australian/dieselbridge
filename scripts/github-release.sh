@@ -12,14 +12,14 @@ APK="${2:?usage: github-release.sh <version> <apk-path>}"
 command -v gh >/dev/null 2>&1 || { echo "gh CLI not found — install it and run 'gh auth login'" >&2; exit 1; }
 
 TAG="v$VERSION"
-ASSET="pixelbridge-watch-$VERSION.apk"
+ASSET="dieselbridge-$VERSION.apk"
 
 # gh uploads assets under their on-disk basename, so stage the APK under the clean asset name.
 STAGED="$(dirname "$APK")/$ASSET"
 cp "$APK" "$STAGED"
 
 NOTES=$(cat <<EOF
-Standalone Wear OS notification app for the Google Pixel Watch (1st gen).
+Standalone Wear OS bridge app for all WearOS 2+ watches.
 
 **Asset:** \`$ASSET\` — debug-signed; sideload with \`adb install -r $ASSET\`.
 
@@ -29,7 +29,7 @@ EOF
 )
 
 echo "Creating GitHub release $TAG ..."
-gh release create "$TAG" "$STAGED" --title "PixelBridge $TAG" --notes "$NOTES"
+gh release create "$TAG" "$STAGED" --title "DieselBridge $TAG" --notes "$NOTES"
 
 rm -f "$STAGED"
 echo "Done: $(gh repo view --json url -q .url)/releases/tag/$TAG"
