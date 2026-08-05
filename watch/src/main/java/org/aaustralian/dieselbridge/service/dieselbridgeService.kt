@@ -31,6 +31,8 @@ import org.aaustralian.dieselbridge.ble.BlePeripheralController
 import org.aaustralian.dieselbridge.data.MusicStore
 import org.aaustralian.dieselbridge.data.NotificationActions
 import org.aaustralian.dieselbridge.data.NotificationStore
+import org.aaustralian.dieselbridge.health.HealthDataProvider
+import org.aaustralian.dieselbridge.health.createHealthDataProvider
 import org.aaustralian.dieselbridge.tile.MusicTileService
 import org.aaustralian.dieselbridge.tile.PixelBridgeTileService
 
@@ -43,6 +45,7 @@ import org.aaustralian.dieselbridge.tile.PixelBridgeTileService
 class DieselBridgeService : Service() {
 
     private var controller: BlePeripheralController? = null
+    private var healthProvider: HealthDataProvider? = null
 
     /** Coarse-signal watcher that pokes the tile to redraw when connection/battery/latest-notif change. */
     private val tileScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -81,6 +84,13 @@ class DieselBridgeService : Service() {
             ContextCompat.RECEIVER_NOT_EXPORTED,
         )
         controller = BlePeripheralController(applicationContext).also { it.start() }
+        // Requires BODY_SENSORS (or health.READ_HEART_RATE on API 36+) to already be granted;
+        // if not, this simply yields no samples rather than crashing - see docs/dev-environment.md.
+        healthProvider = createHealthDataProvider(applicationContext).also { provider ->
+            provider.start { sample ->
+                controller?.sendActivity(sample.timestampMs, sample.heartRateBpm, sample.steps)
+            }
+        }
         // Route UI action taps (dismiss / reply / open) to the controller's BLE back-channel.
         NotificationActions.handler = { id, action, reply -> controller?.sendAction(id, action, reply) }
         // Route find-phone taps to the controller so the watch can buzz the phone over BLE.
@@ -120,6 +130,8 @@ class DieselBridgeService : Service() {
         runCatching { unregisterReceiver(batteryReceiver) }
         controller?.stop()
         controller = null
+        healthProvider?.stop()
+        healthProvider = null
         super.onDestroy()
     }
 

@@ -149,6 +149,27 @@ object GbProtocol {
             put("n", cmd)
         }.toString()
 
+    /**
+     * Encodes a watch->phone activity sample: `{"t":"act","ts":<ms>,"hrm":<bpm>,"stp":<steps>,"rt":true}`.
+     * `hrm`/`stp` are omitted when unavailable (sensor not present, not on wrist, etc.) rather than
+     * sent as 0, since 0 has a specific meaning downstream (Gadgetbridge shows 0 bpm as "no reading").
+     * `rt` marks the sample as realtime/live, matching the Bangle.js protocol's live-data semantics
+     * (see docs/ble-protocol.md) — Gadgetbridge does not persist `rt` samples to its activity DB.
+     */
+    fun encodeActivity(
+        timestampMs: Long,
+        heartRateBpm: Int? = null,
+        steps: Int? = null,
+        realtime: Boolean = true,
+    ): String =
+        JSONObject().apply {
+            put("t", "act")
+            put("ts", timestampMs)
+            heartRateBpm?.let { put("hrm", it) }
+            steps?.let { put("stp", it) }
+            put("rt", realtime)
+        }.toString()
+
     private fun parseCanned(o: JSONObject): List<String> {
         val d: JSONArray = o.optJSONArray("d") ?: return emptyList()
         val out = mutableListOf<String>()

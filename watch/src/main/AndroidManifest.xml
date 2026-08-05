@@ -31,6 +31,12 @@
     <!-- Android 9 REQUIRES Location permission to use Bluetooth Low Energy -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
+	
+	<!-- Uh wearos health stuff -->
+	<uses-permission android:name="android.permission.BODY_SENSORS" android:maxSdkVersion="35" />
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE" android:minSdkVersion="36" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" android:minSdkVersion="29" />
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" android:minSdkVersion="31" />
 
     <application
         android:allowBackup="true"

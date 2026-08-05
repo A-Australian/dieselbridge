@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.androidx.wear.protolayout.expression)
     implementation(libs.androidx.wear.tiles.tooling.preview)
     debugImplementation(libs.androidx.wear.tiles.tooling)
+	implementation("androidx.health:health-services-client:1.1.0")
     // CallbackToFutureAdapter for the tile's ListenableFuture returns
     implementation(libs.androidx.concurrent.futures)
 

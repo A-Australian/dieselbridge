@@ -143,6 +143,19 @@ class BlePeripheralController(private val context: Context) {
     }
 
     /**
+     * Watch -> phone: activity sample (heart rate / steps), sourced from [org.aaustralian.dieselbridge.health.HealthDataProvider].
+     * No local-state side effects (unlike sendAction's optimistic dismiss) - this is pure telemetry.
+     * Not logged via ProbeStateHolder.log at Log.i level to avoid flooding the debug log, since
+     * samples can arrive frequently; bump to Log.i only if debugging the health pipeline itself.
+     */
+    fun sendActivity(timestampMs: Long, heartRateBpm: Int?, steps: Int?): Boolean {
+        val line = GbProtocol.encodeActivity(timestampMs, heartRateBpm, steps)
+        val sent = gattServer?.sendLine(line) ?: false
+        Log.d(TAG, "act TX: $line (sent=$sent)")
+        return sent
+    }
+
+    /**
      * Battery broadcast callback from the service. Mirrors the level/charging into [ProbeStateHolder]
      * and pushes a `status` line when the value changed (dedup against [lastSentPct]/[lastSentChg]);
      * the BLE send no-ops if no central is connected.
