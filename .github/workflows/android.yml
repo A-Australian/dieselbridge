@@ -1,0 +1,35 @@
+name: Android CI
+
+on:
+  workflow_dispatch: # Enables on-demand manual triggers with branch selection
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    # New step to save and expose the build artifacts
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-build-artifacts
+        path: |
+          **/build/outputs/apk/**/*.apk
+          **/build/outputs/bundle/**/*.aab
+        retention-days: 7 # Optional: Deletes the file after 7 days to save space
